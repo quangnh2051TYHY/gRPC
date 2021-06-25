@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+import "common/address.proto";
+import "common/car.proto";
+import "google/protobuf/wrappers.proto";   //wrapper for data type
+
+option java_multiple_files = true;
+option java_package = "org.example.entity";
+
+
+
+message Person {
+  string name = 1; //variable
+  google.protobuf.Int32Value age = 2; //variable
+// int64 phoneNumber = 8; //long
+//  bool = boolean
+//  byte[] = bytes
+  //allow to use call another class
+  common.Address address = 3;
+  common.Car car = 4;
+  repeated GirlFriend girlFriend = 5;
+  map<int32, GirlFriend> sleepCalendar = 6;
+  BodyStyle bodyStyle = 7;
+}
+
+message GirlFriend {
+  string name = 1;
+  int32 age = 2;
+}
+
+//Enum example
+enum BodyStyle {
+  RONALDO = 0;
+  MESSI = 1;
+}
+

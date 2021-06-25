@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.example.entity";
+
+message BalanceCheckRequest {
+  int32 account_number = 1;
+}
+
+//USD
+message Balance {
+  int32 amount = 1;
+}
+
+service BankService {
+  //unary
+  rpc getBalance(BalanceCheckRequest) returns (Balance);
+  //server-streaming
+  rpc withDraw(WithDrawRequest) returns(stream Money);
+}
+
+
+//Server streaming RPC
+message WithDrawRequest {
+  int32 account_number = 1;
+  int32 amount = 2;
+}
+
+message Money {
+  int32 value = 1;
+}
