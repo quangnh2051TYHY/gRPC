@@ -12,11 +12,16 @@ message Balance {
   int32 amount = 1;
 }
 
+
+
 service BankService {
   //unary
   rpc getBalance(BalanceCheckRequest) returns (Balance);
   //server-streaming
   rpc withDraw(WithDrawRequest) returns(stream Money);
+  //Client-side streaming
+  rpc cashDeposit(stream DepositRequest) returns (Balance);
+  //BIDI bi-direction streaming
 }
 
 
@@ -28,4 +33,10 @@ message WithDrawRequest {
 
 message Money {
   int32 value = 1;
+}
+
+//Client-side streaming
+message DepositRequest {
+  int32 account_number = 1;
+  int32 amount = 2;
 }

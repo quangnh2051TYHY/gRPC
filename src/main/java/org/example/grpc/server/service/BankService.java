@@ -1,8 +1,10 @@
-package org.example.grpc.server;
+package org.example.grpc.server.service;
 
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import org.example.entity.*;
+import org.example.grpc.server.db.AccountFakeDb;
+import org.example.grpc.server.CashStreamingRequest;
 
 public class BankService extends BankServiceGrpc.BankServiceImplBase {
 
@@ -43,5 +45,10 @@ public class BankService extends BankServiceGrpc.BankServiceImplBase {
 //      }
     }
     responseObserver.onCompleted();
+  }
+
+  @Override
+  public StreamObserver<DepositRequest> cashDeposit(StreamObserver<Balance> responseObserver) {
+    return new CashStreamingRequest(responseObserver);
   }
 }

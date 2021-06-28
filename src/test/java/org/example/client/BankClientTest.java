@@ -3,8 +3,10 @@ package org.example.client;
 import com.google.common.util.concurrent.Uninterruptibles;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.stub.StreamObserver;
 import org.example.entity.BalanceCheckRequest;
 import org.example.entity.BankServiceGrpc;
+import org.example.entity.DepositRequest;
 import org.example.entity.WithDrawRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -54,7 +56,7 @@ public class BankClientTest {
     Assertions.assertEquals(30, this.blockingStub.getBalance(balanceCheckRequest).getAmount());
   }
 
-  //don't need to wait response
+  //Async don't need to wait response
   @Test
   public void withdrawAsyncTest() throws InterruptedException {
     CountDownLatch latch = new CountDownLatch(1);
@@ -66,5 +68,24 @@ public class BankClientTest {
     this.bankServiceStub.withDraw(withDrawRequest, new MoneyStreamingResponse(latch));
     latch.await();
 //    Uninterruptibles.sleepUninterruptibly(3, TimeUnit.SECONDS);
+  }
+
+  //test client=side streaming
+  @Test
+  public void depositTest() throws InterruptedException {
+    CountDownLatch latch = new CountDownLatch(1);
+
+    StreamObserver<DepositRequest> balanceStreamObserver = this.bankServiceStub
+        .cashDeposit(new BalanceStreamObserve(latch));
+    for( int i = 0; i < 10; i++) {
+      DepositRequest depositRequest = DepositRequest.newBuilder()
+          .setAccountNumber(10)
+          .setAmount(10)
+          .build();
+      balanceStreamObserver.onNext(depositRequest);
+    }
+    //client
+    balanceStreamObserver.onCompleted();
+    latch.await();
   }
 }

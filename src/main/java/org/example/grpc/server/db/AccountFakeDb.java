@@ -1,4 +1,4 @@
-package org.example.grpc.server;
+package org.example.grpc.server.db;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -14,7 +14,7 @@ public class AccountFakeDb {
       .boxed()
       .collect(Collectors.toMap(
           Function.identity(),
-          v -> v * 10));
+          v -> v * 100));
 
   public static int getBalance(int accountId) {
     return balanceMap.get(accountId);
@@ -28,10 +28,7 @@ public class AccountFakeDb {
     return balanceMap.computeIfPresent(accountId, (k, v) -> v - amount);
   }
 
-  //test deposit withdraw
-//  public static void main(String[] args) {
-//    System.out.println(balanceMap);
-//    deposit(1, 50);
-//    System.out.println(balanceMap);
-//  }
+  public static void printAccountDetails() {
+    System.out.println(balanceMap);
+  }
 }

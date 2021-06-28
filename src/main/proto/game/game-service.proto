@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "org.example.entity";
+
+message Die {
+  int32 value = 1;
+}
+
+message Player {
+  string name = 1;
+  int32 position = 2;
+  State state = 3;
+}
+
+enum State {
+  WIN = 0;
+  PLAYING = 1;
+  LOSE = 2;
+}
+
+message GameState {
+  repeated Player player = 2;
+}
+
+
+service GameService {
+  rpc roll(stream Die) returns (stream GameState);
+  rpc play(PlayerAmountReq) returns (stream GameState);
+}
+
+message PlayerAmountReq {
+  int32 numberPlayer = 1;
+}
